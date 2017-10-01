@@ -23,7 +23,7 @@ public class ProfileController {
 		return "redirect:/profile";
 	}
 	
-	@ModelAttribute
+	@ModelAttribute("dateFormat")
 	public String localeFormat(Locale locale) {
 		return USLocalDateFormatter.getPattern(locale);
 	}
