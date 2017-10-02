@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import pl.martapiatek.date.PastLocalDate;
+
 public class ProfileForm {
 
 	@Size(min=2)
@@ -20,6 +22,7 @@ public class ProfileForm {
 	private String email;
 	
 	@NotNull
+	@PastLocalDate
 	private LocalDate birthDate;
 	private List<String> tastes = new ArrayList<>();
 	
