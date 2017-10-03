@@ -35,15 +35,17 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 			<div th:errors="*{birthDate}" class="red-text">Błąd</div>
 		</div>
 	</div>
+	
 	<fieldset class="row">
-	<legend th:text="#{tastes.legend}">Co lubisz robić?</legend>
-	<button class="btn teal" type="submit" name="addTaste" th:text="#{add.taste}">Dodaj preferencję
+	<legend th:text="#{tastes.legend}">Co lubisz?</legend>
+	<button class="btn teal" type="submit" name="addTaste" 
+	th:text="#{add.taste}">Dodaj preferencję
 	<i class="mdi-content-add left"></i>
 	</button>
 	<div th:errors="*{tastes}" class="red-text">Błąd</div>
 	<div class="row" th:each="row,rowStat : *{tastes}">
 		<div class="col s6">
-			<input type="text" th:field="*{tastes[_${rowStat.index}_]}"
+			<input type="text" th:field="*{tastes[__${rowStat.index}__]}"
 			th:placeholder="#{taste.placeholder}" />
 	</div>
 	<div class="col s6">
