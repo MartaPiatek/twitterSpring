@@ -15,14 +15,14 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<div class ="row">
 		<div class="input-field col s6 ">
 			<input th:field="${profileForm.twitterHandle}" id="twitterHandle"  type="text"
-			th:errorclass="invalid" />
+			required="required" th:errorclass="invalid" />
 			<label for="twitterHandle" th:text="#{twitter.handle}">Identyfikator Twitter</label>
 			<div th:errors="*{twitterHandle}" class="red-text">Błąd</div>
 		</div>
 		
 		<div class="input-field col s6 ">
-			<input th:field="${profileForm.email}"  id="email"  type="text" 
-			th:errorclass="invalid" />
+			<input th:field="${profileForm.email}"  id="email"  type="email" 
+			required="required" th:errorclass="invalid" />
 			<label for="email" th:text="#{email}">Adres e-mail</label>
 			<div th:errors="*{email}" class="red-text">Błąd</div>
 		</div>
@@ -30,7 +30,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<div class ="row">
 		<div class="input-field col s6 ">
 			<input th:field="${profileForm.birthDate}" id="birthDate"  type="text"
-			th:errorclass="invalid"  />
+			required="required" th:errorclass="invalid"  />
 			<label for="birthDate" th:text="#{birthdate}" th:placeholder="${dateFormat}">Data urodzenia</label>
 			<div th:errors="*{birthDate}" class="red-text">Błąd</div>
 		</div>
@@ -45,7 +45,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<div th:errors="*{tastes}" class="red-text">Błąd</div>
 	<div class="row" th:each="row,rowStat : *{tastes}">
 		<div class="col s6">
-			<input type="text" th:field="*{tastes[__${rowStat.index}__]}"
+			<input type="text" required="required" th:field="*{tastes[__${rowStat.index}__]}"
 			th:placeholder="#{taste.placeholder}" />
 	</div>
 	<div class="col s6">
@@ -65,5 +65,17 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	</div>
 </form>
 </div>
+
+
+<script layout:fragment="script">
+$('button').bind('click',function(e){
+	if(e.currentTarget.name === 'save'){
+		$(e.currentTarget.form).removeAttr('novalidate');
+	} else{
+		$(e.currentTarget.form).attr('novalidate','novalidate');
+	}
+});
+
+</script>
 </body>
 </html>
