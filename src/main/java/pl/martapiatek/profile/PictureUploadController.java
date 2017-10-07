@@ -1,26 +1,33 @@
 package pl.martapiatek.profile;
 
-import java.io.*;
-import java.net.URLConnection;
+import pl.martapiatek.config.PictureUploadProperties;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
-import pl.martapiatek.config.PictureUploadProperties;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Locale;
+
+
 
 //@SessionAttributes("picturePath")
 @Controller
@@ -28,18 +35,19 @@ public class PictureUploadController {
 
 	private final Resource picturesDir;
 	private final Resource anonymousPicture;
-	
+	private final MessageSource messageSource;
 	
 	@Autowired
-	public PictureUploadController(PictureUploadProperties uploadProperties) {
+	public PictureUploadController(PictureUploadProperties uploadProperties, MessageSource messageSource) {
 		picturesDir = uploadProperties.getUploadPath();
 		anonymousPicture = uploadProperties.getAnonymousPicture();
+		this.messageSource = messageSource;
 	}
 	
 	public static final Resource PICTURES_DIR = new FileSystemResource("./pictures");
 	
 	
-	@ModelAttribute
+	@ModelAttribute("picturePath")
 	public Resource picturePath() {
 		return anonymousPicture;
 	}
@@ -78,19 +86,19 @@ public class PictureUploadController {
 	}
 	
 	@RequestMapping("uploadError")
-	public ModelAndView onUploadError(HttpServletRequest request) {
+	public ModelAndView onUploadError(Locale locale) {
 		
 		ModelAndView modelAndView = new ModelAndView("profile/uploadPage");
 		
-		modelAndView.addObject("error",request.getAttribute(WebUtils.ERROR_MESSAGE_ATTRIBUTE));
+		modelAndView.addObject("error",messageSource.getMessage("upload.file.too.big", null, locale));
 		
 		return modelAndView;
 	}
 	
 	@ExceptionHandler(IOException.class)
-	public ModelAndView handleIOException(IOException exception) {
+	public ModelAndView handleIOException(Locale locale) {
 		ModelAndView modelAndView = new ModelAndView("profile/uploadPage");
-		modelAndView.addObject("error", exception.getMessage());
+		modelAndView.addObject("error", messageSource.getMessage("upload.io.exception",null, locale));
 		return modelAndView;
 	}
 	
